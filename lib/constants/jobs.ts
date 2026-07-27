@@ -2,7 +2,7 @@ export interface JobSkillMapping {
   job: string;
   skills: string[];
 }
-
+export const defaultImageURL = 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgKHtxBW4TSDJKRcQhlsRi_6vzxAC74O30Lce0xnTbh41XRiSH5lGl398oXrm3Y0_V0-YuiU6j7QJgAZyjitB7gcYmVCfJ7IyC_H7J_HPHRO207A_ddK8njJQPHIrwzsQoKRDEh8l0Wp_M_xvN_Nh55e7qcyAzbMdiTJd3TOXTqRanU4iasli3-f_7O6Q/s3840/BEAUTIFUL-WALLPAPER-5032023.png'
 export const JOBS_WITH_SKILLS: Record<string, string[]> = {
   "Frontend Developer": [
     "React",

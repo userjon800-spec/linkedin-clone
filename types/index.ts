@@ -12,6 +12,8 @@ export interface IUser {
   skills: string[];
   experience: IExperience[];
   education: IEducation[]
+  role: 'user' | 'admin' | 'company';
+  backgroundImage: string
 }
 export interface IExperience {
   _id: string;

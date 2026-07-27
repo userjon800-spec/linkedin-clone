@@ -18,6 +18,10 @@ export async function GET(req: NextRequest) {
     const { password, ...securedUser } = user.toObject();
     return NextResponse.json({ success: true, user: securedUser });
   } catch (error) {
-    console.error(error);
+    console.error("Register error:", error);
+    return NextResponse.json(
+      { message: "Serverda kutilmagan xatolik yuz berdi" },
+      { status: 500 },
+    );
   }
 }

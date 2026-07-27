@@ -1,4 +1,4 @@
-import { JOBS_LIST, JOBS_WITH_SKILLS } from "@/lib/constants/jobs";
+import { defaultImageURL, JOBS_LIST } from "@/lib/constants/jobs";
 import { Schema, models, model } from "mongoose";
 const ExperienceSchema = new Schema(
   {
@@ -26,16 +26,18 @@ const userSchema = new Schema(
       lowercase: true,
       trim: true,
     },
-    password: { type: String, required: true, select: false },
+    password: { type: String, required: true },
     firstName: { type: String, required: true },
+    role: { type: String, default: "user", enum: ["user", "admin", 'company'] },
     lastName: { type: String },
     age: { type: Number },
-    avatar: { type: String, default: "" },
+    avatar: { type: String, default: "https://github.com/shadcn.png" },
     job: {
       type: String,
       required: true,
       enum: JOBS_LIST,
     },
+    backgroundImage: { type: String, default: defaultImageURL },
     bio: { type: String, default: "" },
     location: { type: String, default: "" },
     website: { type: String, default: "" },

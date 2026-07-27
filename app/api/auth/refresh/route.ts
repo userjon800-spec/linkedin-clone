@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { connectDB } from "@/lib/mongodb";
 import { RefreshToken } from "@/models/refresh-token";
 import { generateAccessToken } from "@/lib/tokens";
+import { cookies } from "next/headers";
 const isProduction = process.env.NODE_ENV === "production";
 export async function POST(req: NextRequest) {
   try {
@@ -69,9 +70,9 @@ export async function POST(req: NextRequest) {
     return response;
   } catch (error) {
     console.error("Refresh token error:", error);
-    return NextResponse.json(
-      { message: "Serverda xatolik yuz berdi" },
-      { status: 500 },
-    );
+    const cookieStore = await cookies();
+    cookieStore.delete("accessToken");
+    cookieStore.delete("refreshToken");
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 }

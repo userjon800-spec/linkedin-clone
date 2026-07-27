@@ -42,8 +42,8 @@ import { Button } from "../ui/button";
 import api from "@/lib/api";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { getUsers } from "@/lib/request";
 import { IUser } from "@/types";
+import { getUsersClient } from "@/lib/request.client";
 const navbarItems = [
   { name: "Home", href: "/", icon: Home },
   { name: "My Network", href: "/network", icon: Users },
@@ -66,12 +66,12 @@ export default function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const [user, setUser] = useState<IUser | null>(null);
+  const [user, setUser] = useState<IUser | undefined>(undefined);
   const router = useRouter();
   const getUser = async () => {
     try {
-      const res = await getUsers();
-      setUser(res.data.user);
+      const res = await getUsersClient();
+      setUser(res?.user);
     } catch (error) {
       console.error(error);
     }
@@ -97,7 +97,6 @@ export default function Navbar() {
   useEffect(() => {
     getUser();
   }, []);
-  console.log(user)
   return (
     <div className="w-full bg-white dark:bg-[#1a1a1a] border-b border-[#e0e0e0] dark:border-[#333333] transition-colors duration-300 sticky top-0 z-50 py-0.5">
       <div className="max-w-370 mx-auto px-2 md:px-4 h-fit md:h-13 flex items-center justify-between gap-2 md:gap-4">
