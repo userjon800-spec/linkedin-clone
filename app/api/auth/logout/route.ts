@@ -12,7 +12,6 @@ export async function POST(req: NextRequest) {
           process.env.JWT_REFRESH_SECRET!,
         ) as JwtPayload & { userId: string };
         // bazadan ushbu aniq tokenni o'chirib tashlaymiz
-        console.log(decoded);
         await deleteRefreshToken(decoded.userId, refreshToken);
       } catch (err) {
         // Token muddati o'tgan yoki yaroqsiz bo'lsa ham cookie'ni tozalashda davom etamiz

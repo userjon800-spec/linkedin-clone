@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { connectDB } from "@/lib/mongodb";
 import { User } from "@/models/user";
+import { signupSchema } from "@/lib/validations/auth"; // Zod sxemasi (agar bo'lsa)
 import {
   generateAccessToken,
   generateRefreshToken,
@@ -11,50 +12,77 @@ const isProduction = process.env.NODE_ENV === "production";
 export async function POST(req: Request) {
   try {
     await connectDB();
-    const { email, password, firstName } = await req.json();
-    const isExistingUser = await User.findOne({ email });
-    if (isExistingUser) {
+    const body = await req.json();
+    // 1. Zod orqali backend validatsiyasi (tavsiya etiladi)
+    const validationResult = signupSchema.safeParse(body);
+    if (!validationResult.success) {
       return NextResponse.json(
-        { error: "Bu allaqachon email ro'yxatdan o'tgan" },
+        {
+          message: "Ma'lumotlar noto'g'ri kiritildi",
+          errors: validationResult.error.flatten().fieldErrors,
+        },
         { status: 400 },
       );
     }
+    const { email, password, confirmPassword, ...otherData } =
+      validationResult.data;
+    // 2. Email mavjudligini tekshirish
+    const isExistingUser = await User.findOne({ email });
+    if (isExistingUser) {
+      return NextResponse.json(
+        { message: "Bu email allaqachon ro'yxatdan o'tgan" },
+        { status: 400 },
+      );
+    }
+    // 3. Parolni hashlash va foydalanuvchini yaratish
     const hashedPassword = await bcrypt.hash(password, 10);
+    // confirmPassword siz faqat kerakli ma'lumotlarni saqlaymiz
     const user = await User.create({
+      ...otherData,
       email,
       password: hashedPassword,
-      firstName,
     });
-    // 1. Tokenlarni generatsiya qilish
-    const accessToken = generateAccessToken(user._id.toString());
-    const refreshToken = generateRefreshToken(user._id.toString());
-    // 2. Refresh tokenni alohida collection saqlaymiz
+    // 4. Tokenlarni generatsiya qilish
+    const userId = user._id.toString();
+    const accessToken = generateAccessToken(userId);
+    const refreshToken = generateRefreshToken(userId);
+    // 5. Refresh tokenni saqlash
     const userAgent = req.headers.get("user-agent") || undefined;
-    await saveRefreshToken(user._id.toString(), refreshToken, userAgent);
-    // 3. Tokenlarni cookie ga qo'shamiz va javob beramiz
+    await saveRefreshToken(userId, refreshToken, userAgent);
+    // 6. Javob qaytarish uchun parolsiz foydalanuvchi obyekti
+    const userResponse = {
+      _id: user._id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      // boshqa kerakli frontend maydonlari...
+    };
     const response = NextResponse.json({
       success: true,
       message: "Siz ro'yxatdan muvaffaqiyatli o'tdingiz",
+      user: userResponse,
     });
-    response.cookies.set("accessToken", accessToken, {
+    // 7. Cookie sozlamalari
+    const cookieOptions = {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? "none" : "lax",
+      // Agar backend va frontend bitta domain bo'lsa 'lax' eng xavfsizidir
+      sameSite: (isProduction ? "lax" : "lax") as "lax" | "none" | "strict",
       path: "/",
-      maxAge: 15 * 60,
+    };
+    response.cookies.set("accessToken", accessToken, {
+      ...cookieOptions,
+      maxAge: 15 * 60, // 15 daqiqa
     });
     response.cookies.set("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? "none" : "lax",
-      path: "/",
-      maxAge: 60 * 60 * 24 * 7,
+      ...cookieOptions,
+      maxAge: 60 * 60 * 24 * 7, // 7 kun
     });
     return response;
   } catch (error) {
     console.error("Register error:", error);
     return NextResponse.json(
-      { error: `Server xatoligi yuz berdi, ${error}` },
+      { message: "Serverda kutilmagan xatolik yuz berdi" },
       { status: 500 },
     );
   }

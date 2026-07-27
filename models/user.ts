@@ -1,4 +1,5 @@
-import { Schema, models, model, InferSchemaType } from "mongoose";
+import { JOBS_LIST, JOBS_WITH_SKILLS } from "@/lib/constants/jobs";
+import { Schema, models, model } from "mongoose";
 const ExperienceSchema = new Schema(
   {
     company: { type: String, required: true },
@@ -25,10 +26,16 @@ const userSchema = new Schema(
       lowercase: true,
       trim: true,
     },
-    password: { type: String },
+    password: { type: String, required: true, select: false },
     firstName: { type: String, required: true },
     lastName: { type: String },
+    age: { type: Number },
     avatar: { type: String, default: "" },
+    job: {
+      type: String,
+      required: true,
+      enum: JOBS_LIST,
+    },
     bio: { type: String, default: "" },
     location: { type: String, default: "" },
     website: { type: String, default: "" },
@@ -40,5 +47,4 @@ const userSchema = new Schema(
   { timestamps: true },
 );
 userSchema.index({ firstName: "text", lastName: "text", headline: "text" });
-export type IUser = InferSchemaType<typeof userSchema>;
 export const User = models.User || model("User", userSchema);

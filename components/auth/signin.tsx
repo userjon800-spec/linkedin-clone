@@ -4,7 +4,7 @@ import { Mail, Lock } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
 import { useState } from "react";
-import { api } from "@/lib/api";
+import api from "@/lib/api";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 export default function Signin() {
@@ -24,7 +24,7 @@ export default function Signin() {
         router.refresh()
       }, 3000);
     } catch (error: any) {
-      console.log(error);
+      console.error(error);
       toast.error(error.response.data.message);
     }
   };
