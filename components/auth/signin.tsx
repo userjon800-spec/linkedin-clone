@@ -22,7 +22,7 @@ export default function Signin() {
       toast.success(res.data.message);
       setTimeout(() => {
         router.refresh()
-      }, 3000);
+      }, 1000);
     } catch (error: any) {
       console.error(error);
       toast.error(error.response.data.message);

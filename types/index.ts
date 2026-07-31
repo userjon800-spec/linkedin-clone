@@ -14,6 +14,7 @@ export interface IUser {
   education: IEducation[]
   role: 'user' | 'admin' | 'company';
   backgroundImage: string
+  job: string
 }
 export interface IExperience {
   _id: string;
@@ -30,4 +31,12 @@ export interface IEducation{
   field: string;
   startYear: number;
   endYear: number;
+}
+export interface IPost{
+  author: IUser
+  _id: string;
+  content: string;
+  imageUrl: string;
+  likes: string[];
+  commentsCount: number
 }

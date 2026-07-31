@@ -1,22 +1,6 @@
 "use client";
 import Link from "next/link";
-import {
-  Home,
-  Users,
-  Briefcase,
-  MessageCircle,
-  Bell,
-  Search,
-  LayoutGrid,
-  ChevronDown,
-  LogOut,
-  Settings,
-  UserCircle,
-  Award,
-  FileText,
-  Clock,
-  Plus,
-} from "lucide-react";
+import { Search, LayoutGrid, ChevronDown, LogOut } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import {
   DropdownMenu,
@@ -44,24 +28,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { IUser } from "@/types";
 import { getUsersClient } from "@/lib/request.client";
-const navbarItems = [
-  { name: "Home", href: "/", icon: Home },
-  { name: "My Network", href: "/network", icon: Users },
-  { name: "Jobs", href: "/jobs", icon: Briefcase },
-  { name: "Messaging", href: "/messages", icon: MessageCircle },
-  { name: "Notifications", href: "/notifications", icon: Bell },
-];
-const businessTools = [
-  { name: "Post a job", icon: Plus, href: "/jobs/post" },
-  { name: "Advertise", icon: FileText, href: "/advertise" },
-  { name: "Analytics", icon: Clock, href: "/analytics" },
-];
-const profileMenu = [
-  { name: "Profile", icon: UserCircle, href: "/profile" },
-  { name: "Settings & Privacy", icon: Settings, href: "/settings" },
-  { name: "Try Premium", icon: Award, href: "/premium" },
-  { name: "Help", icon: FileText, href: "/help" },
-];
+import { businessTools, navbarItems, profileMenu } from "@/lib/constants/menu";
 export default function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
@@ -88,7 +55,7 @@ export default function Navbar() {
         toast.success(res.data.message);
         setTimeout(() => {
           router.push("/auth/signin");
-        }, 3000);
+        }, 1000);
       }
     } catch (error) {
       console.error(error);
@@ -163,7 +130,10 @@ export default function Navbar() {
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center flex-col gap-1 px-2 py-1 rounded-lg hover:bg-[#f3f2ef] dark:hover:bg-[#333333] transition-all duration-200 group cursor-pointer outline-none">
                 <Avatar className="h-7 w-7 md:h-8 md:w-8">
-                  <AvatarImage src={user?.avatar || 'https://via.placeholder.com/150'} alt="User" />
+                  <AvatarImage
+                    src={user?.avatar || "https://via.placeholder.com/150"}
+                    alt="User"
+                  />
                   <AvatarFallback className="bg-[#0a66c2] dark:bg-[#4d8fd4] text-white text-xs">
                     {user?.firstName?.charAt(0)}
                   </AvatarFallback>

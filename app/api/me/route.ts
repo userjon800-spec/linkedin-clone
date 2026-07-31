@@ -1,8 +1,10 @@
+import { connectDB } from "@/lib/mongodb";
 import { User } from "@/models/user";
 import jwt from "jsonwebtoken";
 import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest) {
   try {
+    await connectDB();
     const accessToken = req.cookies.get("accessToken")?.value;
     if (!accessToken) {
       return NextResponse.json(
@@ -20,7 +22,7 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     console.error("Register error:", error);
     return NextResponse.json(
-      { message: "Serverda kutilmagan xatolik yuz berdi" },
+      { message: `Serverda kutilmagan xatolik yuz berdi` },
       { status: 500 },
     );
   }

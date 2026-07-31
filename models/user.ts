@@ -27,8 +27,9 @@ const userSchema = new Schema(
       trim: true,
     },
     password: { type: String, required: true },
+    posts: { type: [Schema.Types.ObjectId], ref: "Post", default: [] },
     firstName: { type: String, required: true },
-    role: { type: String, default: "user", enum: ["user", "admin", 'company'] },
+    role: { type: String, default: "user", enum: ["user", "admin", "company"] },
     lastName: { type: String },
     age: { type: Number },
     avatar: { type: String, default: "https://github.com/shadcn.png" },
@@ -45,8 +46,15 @@ const userSchema = new Schema(
     experience: { type: [ExperienceSchema], default: [] },
     education: { type: [EducationSchema], default: [] },
     skills: { type: [String], default: [] },
+    connections: { type: [Schema.Types.ObjectId], ref: "User", default: [] },
+    followers: { type: [Schema.Types.ObjectId], ref: "User", default: [] },
+    following: { type: [Schema.Types.ObjectId], ref: "User", default: [] },
   },
   { timestamps: true },
 );
 userSchema.index({ firstName: "text", lastName: "text", headline: "text" });
+// LEKIN agar Next.js dev serverida schema o'zgargan bo'lsa, uni quyidagicha eksport qiling:
+if (process.env.NODE_ENV === "development" && models.User) {
+  delete (models as any).User;
+}
 export const User = models.User || model("User", userSchema);

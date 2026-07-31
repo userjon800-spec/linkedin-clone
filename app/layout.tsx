@@ -6,7 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "LinkedIn Clone",
+  title: "Linkedin",
   description: "It's linkedin clone created by me",
   icons:{
     icon:"https://pngimg.com/uploads/linkedIn/linkedIn_PNG27.png"

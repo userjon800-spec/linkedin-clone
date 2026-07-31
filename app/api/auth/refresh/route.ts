@@ -1,3 +1,4 @@
+// app\api\auth\refresh\route.ts
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
@@ -35,7 +36,7 @@ export async function POST(req: NextRequest) {
     if (savedTokens.length === 0 || !decoded.userId) {
       return NextResponse.json(
         { error: "Seans topilmadi yoki bekor qilingan" },
-        { status: 403 },
+        { status: 401 },
       );
     }
     // 4. Kelgan token bazadagi xeshlangan tokenlardan birortasiga mos kelishini tekshiramiz
@@ -50,7 +51,7 @@ export async function POST(req: NextRequest) {
     if (!matchedTokenDoc) {
       return NextResponse.json(
         { error: "Ruxsat etilmagan harakat (Token mos kelmadi)" },
-        { status: 403 },
+        { status: 401 },
       );
     }
     // 5. Yangi Access Token yaratamiz

@@ -135,7 +135,7 @@ export default function Signup() {
       toast.success(res.data.message || "Muvaffaqiyatli ro'yxatdan o'tdingiz!");
       setTimeout(() => {
         router.push("/auth/signin");
-      }, 1500);
+      }, 1000);
     } catch (error: any) {
       console.error(error);
       toast.error(error.response?.data?.message || "Xatolik yuz berdi");
