@@ -1,11 +1,11 @@
 import { getUsersServer } from "@/lib/request.server";
 import dynamic from "next/dynamic";
-const LeftMenuBar = dynamic(() => import("@/components/shared/left_menu_bar"));
-const StartPost = dynamic(() => import("@/components/shared/start_add_post"));
+const LeftMenuBar = dynamic(() => import("@/components/shared/left-menu-bar"));
+const StartPost = dynamic(() => import("@/components/shared/start-add-post"));
 const Puzzles = dynamic(() => import("@/components/shared/puzzles"));
-const PostCards = dynamic(() => import("@/components/shared/post_cards"));
-const AddedFeed = dynamic(() => import("@/components/shared/added_feed"));
-const Skeleton = dynamic(() => import("@/components/shared/linkedin_skeleton"));
+const PostCards = dynamic(() => import("@/components/shared/post-cards"));
+const AddedFeed = dynamic(() => import("@/components/shared/added-feed"));
+const Skeleton = dynamic(() => import("@/components/shared/linkedin-skeleton"));
 export default async function Page() {
   const data = await getUsersServer();
   if (!data) {

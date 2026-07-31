@@ -22,10 +22,7 @@ export default function AddedFeed(userId: { userId: string }) {
         const { data } = await api.get<{ succes: true; users: IUser[] }>(
           "/api/users",
         );
-        const filteredUsers = data.users.filter(
-          (user) => user._id !== userId.userId,
-        );
-        setUsers(filteredUsers);
+        setUsers(data.users);
       } catch (error) {
         console.error("Userlarni olishda xatolik:", error);
       } finally {

@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
         { status: 401 },
       );
     }
-    const users = await User.find({});
+    const users = (await User.find({})).filter((user) => user._id !== userId);
     return NextResponse.json({ success: true, users });
   } catch (error) {
     console.error("Register error:", error);

@@ -15,6 +15,10 @@ export interface IUser {
   role: 'user' | 'admin' | 'company';
   backgroundImage: string
   job: string
+  connections: string[]
+  followers: string[]
+  following: any[]
+  posts: IPost[]
 }
 export interface IExperience {
   _id: string;

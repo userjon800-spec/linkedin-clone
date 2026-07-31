@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { Plus, Bookmark, Users, Newspaper, Calendar } from "lucide-react";
 import { IUser } from "@/types";
-import AddExperienceModal from "./add_experience_modal";
+import AddExperienceModal from "./add-experience-modal";
 import { toast } from "sonner";
 import api from "@/lib/api";
 
